@@ -5,8 +5,10 @@ from models import db, Contact
 from sqlalchemy import or_
 from dotenv import load_dotenv
 
-load_dotenv()  # Load from .env for local development
+# load from .env for local development
+load_dotenv()  
 
+# initialize Flask app and SQLAlchemy
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")  # PostgreSQL URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -16,6 +18,12 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
+# endpoint to check if the API is running 
+@app.route('/', methods=['GET'])
+def index():
+    return jsonify({"message": "API is up and running!"}), 200
+
+# endpoint to identify or create a contact based on email or phone number
 @app.route('/identify', methods=['POST'])
 def identify():
     data = request.json
